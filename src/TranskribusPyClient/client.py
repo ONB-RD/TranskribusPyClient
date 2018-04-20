@@ -148,6 +148,7 @@ class TranskribusClient():
 #     
 #         self.sREQ_LALines           = sServerUrl + '/rest/LA/lines'
 #         self.sREQ_LABaseLines       = sServerUrl + '/rest/LA/baselines'
+        self.sREQ_collections_list                  = sServerUrl + '/rest/collections/list'
         self.sREQ_collection                        = sServerUrl + '/rest/collections'
         self.sREQ_collection_listEditDeclFeats      = sServerUrl + '/rest/collections/%s/listEditDeclFeats'
         self.sREQ_collection_list                   = sServerUrl + '/rest/collections/%s/list'
@@ -255,7 +256,19 @@ class TranskribusClient():
 
         #we get some json serialized data
         return json.loads(resp.text)
-    
+
+    def listCollections(self):
+        """
+        List existing collections.
+        Return the Transkribus data structure (Pythonic data)
+        or raise an exception.
+        """
+        self._assertLoggedIn()
+        myReq = self.sREQ_collections_list
+        resp = self._GET(myReq, accept="application/json")
+        resp.raise_for_status()
+        return resp.json()
+
     def createCollection(self, sName):
         """
         create a new collectin with given name.
